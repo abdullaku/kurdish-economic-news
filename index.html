@@ -1,166 +1,221 @@
 <!DOCTYPE html>
 <html lang="ckb" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>هەواڵی ئابووری کوردی</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #E8C97A;
-    --dark: #0A0E1A;
-    --dark-card: #111827;
-    --dark-border: #1E2A3A;
-    --text: #E8EDF5;
-    --text-muted: #8A9BB0;
-    --accent: #1E6FFF;
-    --red: #FF4444;
-    --green: #00CC88;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Noto Sans Arabic', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; direction: rtl; }
-  header { background: linear-gradient(135deg, #0A0E1A 0%, #111827 100%); border-bottom: 1px solid var(--dark-border); padding: 0 2rem; position: sticky; top: 0; z-index: 100; }
-  .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; }
-  .logo { display: flex; align-items: center; gap: 12px; }
-  .logo-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-  .logo-text { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--gold), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .logo-sub { font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: -4px; }
-  .live-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.3); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; color: var(--red); }
-  .live-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-  .ticker-wrap { background: rgba(201,168,76,0.08); border-bottom: 1px solid rgba(201,168,76,0.15); overflow: hidden; padding: 8px 0; }
-  .ticker { display: flex; gap: 3rem; animation: ticker 30s linear infinite; white-space: nowrap; }
-  .ticker-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; }
-  .ticker-name { color: var(--gold); font-weight: 600; }
-  .ticker-up { color: var(--green); }
-  .ticker-down { color: var(--red); }
-  @keyframes ticker { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-  main { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
-  .section-title { font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
-  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
-  .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; margin-bottom: 3rem; }
-  .news-card { background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 14px; padding: 1.4rem; transition: all 0.3s ease; cursor: pointer; text-decoration: none; display: block; animation: fadeIn 0.5s ease forwards; opacity: 0; }
-  .news-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.1); }
-  @keyframes fadeIn { to { opacity: 1; } }
-  .card-source { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .source-badge { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2); color: var(--gold); padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
-  .card-time { font-size: 0.72rem; color: var(--text-muted); }
-  .card-title { font-size: 0.98rem; font-weight: 600; line-height: 1.6; margin-bottom: 8px; color: var(--text); }
-  .card-summary { font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
-  .card-footer { display: flex; align-items: center; justify-content: space-between; }
-  .pair-tag { background: rgba(30,111,255,0.1); border: 1px solid rgba(30,111,255,0.2); color: var(--accent); padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
-  .read-more { font-size: 0.75rem; color: var(--gold); }
-  .loading { text-align: center; padding: 4rem; color: var(--text-muted); }
-  .spinner { width: 40px; height: 40px; border: 3px solid var(--dark-border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .telegram-section { background: linear-gradient(135deg, #0A1628, #111827); border: 1px solid rgba(30,111,255,0.2); border-radius: 20px; padding: 3rem 2rem; text-align: center; margin-bottom: 3rem; }
-  .tg-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.8rem; background: linear-gradient(135deg, #2AABEE, #229ED9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .tg-desc { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.7; }
-  .tg-btn { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #2AABEE, #229ED9); color: white; padding: 14px 28px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1rem; transition: all 0.3s; }
-  .tg-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(42,171,238,0.3); }
-  footer { border-top: 1px solid var(--dark-border); padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
-  .update-info { text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.5rem; }
-  @media (max-width: 768px) { .news-grid { grid-template-columns: 1fr; } main { padding: 0 1rem; } }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>هەواڵی ئابووری و فۆرێکس</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #E8C97A;
+            --dark: #0A0E1A;
+            --dark-card: #111827;
+            --dark-border: #1E2A3A;
+            --text: #E8EDF5;
+            --text-muted: #8A9BB0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            direction: rtl;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0A0E1A 0%, #111827 100%);
+            border-bottom: 1px solid var(--dark-border);
+            padding: 1.5rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .news-card {
+            background: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #1a2333;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--gold);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .card-summary {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--dark-border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .telegram-bar {
+            background: linear-gradient(135deg, #0088cc, #005588);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .tg-link {
+            color: white;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .loading { text-align: center; padding: 3rem; font-size: 1.2rem; color: var(--gold); }
+
+        @media (max-width: 600px) {
+            .news-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
+
 <header>
-  <div class="header-inner">
-    <div class="logo">
-      <div class="logo-icon">📊</div>
-      <div>
-        <div class="logo-text">هەواڵی ئابووری کوردی</div>
-        <span class="logo-sub">Kurdish Economic News</span>
-      </div>
-    </div>
-    <div class="live-badge"><div class="live-dot"></div>زیندوو</div>
-  </div>
+    <div class="logo-text">💹 هەواڵی ئابووری و فۆرێکس</div>
 </header>
-<div class="ticker-wrap">
-  <div class="ticker">
-    <span class="ticker-item"><span class="ticker-name">EUR/USD</span> <span class="ticker-up">▲ 1.0842</span></span>
-    <span class="ticker-item"><span class="ticker-name">GBP/USD</span> <span class="ticker-down">▼ 1.2634</span></span>
-    <span class="ticker-item"><span class="ticker-name">XAU/USD</span> <span class="ticker-up">▲ 3,012.50</span></span>
-    <span class="ticker-item"><span class="ticker-name">WTI OIL</span> <span class="ticker-down">▼ 68.42</span></span>
-    <span class="ticker-item"><span class="ticker-name">USD/JPY</span> <span class="ticker-up">▲ 149.23</span></span>
-    <span class="ticker-item"><span class="ticker-name">EUR/USD</span> <span class="ticker-up">▲ 1.0842</span></span>
-    <span class="ticker-item"><span class="ticker-name">GBP/USD</span> <span class="ticker-down">▼ 1.2634</span></span>
-    <span class="ticker-item"><span class="ticker-name">XAU/USD</span> <span class="ticker-up">▲ 3,012.50</span></span>
-    <span class="ticker-item"><span class="ticker-name">WTI OIL</span> <span class="ticker-down">▼ 68.42</span></span>
-    <span class="ticker-item"><span class="ticker-name">USD/JPY</span> <span class="ticker-up">▲ 149.23</span></span>
-  </div>
-</div>
+
 <main>
-  <div class="section-title">📰 دوایین هەواڵەکان</div>
-  <div class="update-info" id="updateInfo">بارکردن...</div>
-  <div id="newsContainer"><div class="loading"><div class="spinner"></div><p>هەواڵەکان بارئەکرێن...</p></div></div>
-  <div class="telegram-section">
-    <div style="font-size:3rem;margin-bottom:1rem">✈️</div>
-    <div class="tg-title">بەشداری چەناڵەکەمان بکە</div>
-    <div class="tg-desc">هەموو ١٥ خولەکێک هەواڵی نوێی فۆرێکس و ئابووری<br>بە کوردیی سۆرانی بۆت دێت</div>
-    <a href="https://t.me/Economic_news_Kurdish" target="_blank" class="tg-btn">✈️ بەشداربوون لە تلیگرام</a>
-  </div>
+    <div class="telegram-bar">
+        بۆ وەرگرتنی هەواڵەکان لە تێلیگرام: <a href="https://t.me/Economic_news_Kurdish" class="tg-link" target="_blank">سەردانمان بکە</a>
+    </div>
+
+    <div id="news-container" class="news-grid">
+        <div class="loading">چاوەڕێ بکە، هەواڵەکان باردەکرێن...</div>
+    </div>
 </main>
-<footer>
-  <p>© ٢٠٢٦ هەواڵی ئابووری کوردی — هەموو مافەکان پارێزراون</p>
-  <p style="margin-top:6px">هەواڵەکان لە CNBC، Bloomberg، Fox Business وەردەگیرێن</p>
-</footer>
+
 <script>
-const SUPABASE_URL = 'https://xekpxulamhgplnxfnczp.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_3i3wA3W-__nQLysnBSB6sQ__Ye-Bn4P';
+    const SUPABASE_URL = 'https://xekpxulamhgplnxfnczp.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_3i3wA3W-__nQLysnBSB6sQ__Ye-Bn4P';
 
-async function loadNews() {
-  const container = document.getElementById('newsContainer');
-  const updateInfo = document.getElementById('updateInfo');
-  try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc&limit=30`,
-      { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` } }
-    );
-    const news = await res.json();
-    if (!news.length) {
-      container.innerHTML = `<div style="text-align:center;padding:4rem;color:var(--text-muted)">
-        <div style="font-size:3rem;margin-bottom:1rem">📭</div>
-        <p>هێشتا هەواڵ نییە — چاوەڕێ بکە</p>
-        <a href="https://t.me/Economic_news_Kurdish" target="_blank" style="color:var(--gold);margin-top:1rem;display:inline-block">بچۆ بۆ چەناڵ ←</a>
-      </div>`;
-      updateInfo.textContent = 'هەواڵی نوێ هەموو ١٥ خولەکێک دێت';
-      return;
+    async function getNews() {
+        const container = document.getElementById('news-container');
+        try {
+            const response = await fetch(
+                `${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc&limit=24`,
+                {
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": `Bearer ${SUPABASE_KEY}`
+                    }
+                }
+            );
+            const data = await response.json();
+
+            if (data.length === 0) {
+                container.innerHTML = '<div class="loading">هیچ هەواڵێک نەدۆزرایەوە.</div>';
+                return;
+            }
+
+            container.innerHTML = ''; // پاککردنەوەی بارکەرەکە
+
+            data.forEach(item => {
+                const card = document.createElement('a');
+                card.href = item.url;
+                card.target = "_blank";
+                card.className = 'news-card';
+
+                // وێنەی سەرەکی یان وێنەیەکی دیفۆڵت ئەگەر وێنەی نەبوو
+                const imageSrc = item.image_url || 'https://images.unsplash.com/photo-1611974717482-9831d3ea748c?auto=format&fit=crop&w=400&q=80';
+
+                card.innerHTML = `
+                    <img src="${imageSrc}" class="card-image" alt="news">
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span>${item.source}</span>
+                            <span>${item.pairs || ''}</span>
+                        </div>
+                        <h2 class="card-title">${item.title_ku}</h2>
+                        <p class="card-summary">${item.summary_ku}</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>📅 ${item.published_at ? item.published_at.split('T')[0] : 'ئێستا'}</span>
+                        <span style="color:var(--gold)">خوێندنەوە...</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        } catch (error) {
+            container.innerHTML = '<div class="loading">کێشەیەک ڕوویدا لە کاتی هێنانی زانیارییەکان.</div>';
+            console.error(error);
+        }
     }
-    updateInfo.textContent = `کۆی هەواڵ: ${news.length} | نوێکردنەوە: ${new Date().toLocaleTimeString('ar')}`;
-    container.innerHTML = '<div class="news-grid" id="newsGrid"></div>';
-    const grid = document.getElementById('newsGrid');
-    news.forEach((item, i) => {
-      const date = new Date(item.published_at);
-      const timeStr = date.toLocaleTimeString('ar', {hour:'2-digit', minute:'2-digit'}) + ' | ' + date.toLocaleDateString('ar');
-      const card = document.createElement('a');
-      card.href = item.url || '#';
-      card.target = '_blank';
-      card.className = 'news-card';
-      card.style.animationDelay = `${i * 0.05}s`;
-      card.innerHTML = `
-        <div class="card-source">
-          <span class="source-badge">${item.source || 'هەواڵ'}</span>
-          <span class="card-time">${timeStr}</span>
-        </div>
-        <div class="card-title">${item.title_ku || ''}</div>
-        ${item.summary_ku ? `<div class="card-summary">${item.summary_ku}</div>` : ''}
-        <div class="card-footer">
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            ${item.pairs ? item.pairs.split(',').map(p => `<span class="pair-tag">${p.trim()}</span>`).join('') : ''}
-          </div>
-          <span class="read-more">زیاتر بخوێنەوە ←</span>
-        </div>`;
-      grid.appendChild(card);
-    });
-  } catch(e) {
-    container.innerHTML = `<div style="text-align:center;padding:4rem;color:var(--text-muted)">کێشە لە بارکردن — دووبارە هەوڵ بدە</div>`;
-  }
-}
 
-loadNews();
-setInterval(loadNews, 5 * 60 * 1000);
+    getNews();
 </script>
+
 </body>
 </html>
