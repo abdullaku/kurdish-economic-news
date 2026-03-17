@@ -43,12 +43,6 @@
             align-items: center;
         }
 
-        /* بەستنەوە بە ویجێتی فەرمی بۆ نرخە ڕاستەوخۆکان */
-        .ticker-wrap {
-            width: 100%;
-            height: 40px;
-        }
-
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -99,7 +93,7 @@
 
         .news-image {
             width: 100%;
-            height: 200px;
+            height: 220px;
             object-fit: cover;
             border-bottom: 1px solid #30363d;
         }
@@ -113,8 +107,6 @@
             color: var(--gold);
             font-size: 0.85rem;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             display: block;
             margin-bottom: 10px;
         }
@@ -130,10 +122,6 @@
             color: #8b949e;
             font-size: 0.95rem;
             line-height: 1.7;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
         }
 
         .news-footer {
@@ -142,7 +130,6 @@
             border-top: 1px solid #30363d;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             font-size: 0.85rem;
             color: #6e7681;
         }
@@ -152,12 +139,6 @@
             padding: 60px 20px;
             margin-top: 60px;
             border-top: 1px solid #30363d;
-            background: #090c10;
-        }
-
-        footer p {
-            margin: 5px 0;
-            color: #8b949e;
         }
 
         .copyright {
@@ -166,18 +147,15 @@
             margin-top: 15px !important;
         }
 
-        /* Responsive */
         @media (max-width: 600px) {
             header h1 { font-size: 2rem; }
-            .news-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- شریتی نرخە ڕاستەوخۆکان لە TradingView وە -->
     <div class="ticker-container">
-        <iframe scrolling="no" allowtransparency="true" frameborder="0" src="https://s.tradingview.com/embed-widget/ticker-tape/?locale=en#%7B%22symbols%22%3A%5B%7B%22proName%22%3A%22FOREXCOM%3ASPX500%22%2C%22title%22%3A%22S%26P%20500%22%7D%2C%7B%22proName%22%3A%22FOREXCOM%3ANSXUSD%22%2C%22title%22%3A%22Nasdaq%20100%22%7D%2C%7B%22proName%22%3A%22FX_IDC%3AEURUSD%22%2C%22title%22%3A%22EUR%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3ABTCUSD%22%2C%22title%22%3A%22BTC%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3AETHUSD%22%2C%22title%22%3A%22ETH%2FUSD%22%7D%2C%7B%22description%22%3A%22GOLD%22%2C%22proName%22%3A%22OANDA%3AXAUUSD%22%7D%5D%2C%22showSymbolLogo%22%3Atrue%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Atrue%2C%22displayMode%22%3A%22adaptive%22%7D" style="box-sizing: border-box; height: 40px; width: 100%;"></iframe>
+        <iframe scrolling="no" allowtransparency="true" frameborder="0" src="https://s.tradingview.com/embed-widget/ticker-tape/?locale=en#%7B%22symbols%22%3A%5B%7B%22proName%22%3A%22FOREXCOM%3ASPX500%22%2C%22title%22%3A%22S%26P%20500%22%7D%2C%7B%22proName%22%3A%22FX_IDC%3AEURUSD%22%2C%22title%22%3A%22EUR%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3ABTCUSD%22%2C%22title%22%3A%22BTC%2FUSD%22%7D%2C%7B%22description%22%3A%22GOLD%22%2C%22proName%22%3A%22OANDA%3AXAUUSD%22%7D%5D%2C%22showSymbolLogo%22%3Atrue%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Atrue%2C%22displayMode%22%3A%22adaptive%22%7D" style="box-sizing: border-box; height: 40px; width: 100%;"></iframe>
     </div>
 
     <div class="container">
@@ -186,21 +164,17 @@
             <p>سەرچاوەی متمانەپێکراوی تۆ بۆ جیهانی بازرگانی و دارایی</p>
         </header>
 
-        <div id="news-container" class="news-grid">
-            <!-- لێرە هەواڵەکان بە شێوەی ئۆتۆماتیکی پڕ دەبنەوە -->
-        </div>
+        <div id="news-container" class="news-grid"></div>
 
         <footer>
-            <p>دروستکراوە بۆ خزمەتگوزاری هەواڵی ئابووری</p>
             <p>دیزاین و پەرەپێدان: <strong>عەبدوڵڵا عەلی</strong></p>
             <p class="copyright">© ٢٠٢٦ هەموو مافەکان پارێزراوە بۆ پەیجەکەمان</p>
         </footer>
     </div>
 
     <script>
-        // زانیارییەکانی Supabase
         const SUPABASE_URL = 'https://xekpxulamhgplnxfnczp.supabase.co';
-        const SUPABASE_KEY = 'لێرە_کۆدەکەت_دابنێ'; // کۆدی Anon Key لێرە دابنێ
+        const SUPABASE_KEY = 'Sb_publishable_3i3wA3W-__nQLysnBSB6sQ__Ye-Bn4P'; 
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -210,38 +184,28 @@
                 .select('*')
                 .order('id', { ascending: false });
 
-            if (error) {
-                console.error("هەڵە لە هێنانی داتا:", error);
-                return;
-            }
+            if (error) return;
 
             const container = document.getElementById('news-container');
             container.innerHTML = '';
 
             data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'news-card';
-                
-                // دروستکردنی کاتێکی جوانتر
                 const dateStr = item.published_at ? item.published_at.split(' ')[0] : '٢٠٢٦';
-
-                card.innerHTML = `
-                    ${item.image_url ? `<img src="${item.image_url}" class="news-image" alt="news">` : ''}
-                    <div class="news-content">
-                        <span class="news-tag">LIVE NEWS</span>
-                        <h2 class="news-title">${item.title_ku}</h2>
-                        <p class="news-summary">${item.summary_ku || ''}</p>
-                    </div>
-                    <div class="news-footer">
-                        <span>📅 ${dateStr}</span>
-                        <span>Bloomberg | وەرگێڕدراو</span>
-                    </div>
-                `;
-                container.appendChild(card);
+                container.innerHTML += `
+                    <div class="news-card">
+                        ${item.image_url ? `<img src="${item.image_url}" class="news-image">` : ''}
+                        <div class="news-content">
+                            <span class="news-tag">LIVE NEWS</span>
+                            <h2 class="news-title">${item.title_ku}</h2>
+                            <p class="news-summary">${item.summary_ku || ''}</p>
+                        </div>
+                        <div class="news-footer">
+                            <span>📅 ${dateStr}</span>
+                            <span>Bloomberg | عەبدوڵڵا عەلی</span>
+                        </div>
+                    </div>`;
             });
         }
-
-        // بانگکردنی فەرمانەکە
         fetchNews();
     </script>
 </body>
