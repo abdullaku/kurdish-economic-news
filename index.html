@@ -1,166 +1,968 @@
 <!DOCTYPE html>
 <html lang="ckb" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>هەواڵی ئابووری کوردی</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #E8C97A;
-    --dark: #0A0E1A;
-    --dark-card: #111827;
-    --dark-border: #1E2A3A;
-    --text: #E8EDF5;
-    --text-muted: #8A9BB0;
-    --accent: #1E6FFF;
-    --red: #FF4444;
-    --green: #00CC88;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Noto Sans Arabic', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; direction: rtl; }
-  header { background: linear-gradient(135deg, #0A0E1A 0%, #111827 100%); border-bottom: 1px solid var(--dark-border); padding: 0 2rem; position: sticky; top: 0; z-index: 100; }
-  .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; }
-  .logo { display: flex; align-items: center; gap: 12px; }
-  .logo-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-  .logo-text { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--gold), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .logo-sub { font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: -4px; }
-  .live-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.3); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; color: var(--red); }
-  .live-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-  .ticker-wrap { background: rgba(201,168,76,0.08); border-bottom: 1px solid rgba(201,168,76,0.15); overflow: hidden; padding: 8px 0; }
-  .ticker { display: flex; gap: 3rem; animation: ticker 30s linear infinite; white-space: nowrap; }
-  .ticker-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; }
-  .ticker-name { color: var(--gold); font-weight: 600; }
-  .ticker-up { color: var(--green); }
-  .ticker-down { color: var(--red); }
-  @keyframes ticker { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-  main { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
-  .section-title { font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
-  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
-  .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; margin-bottom: 3rem; }
-  .news-card { background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 14px; padding: 1.4rem; transition: all 0.3s ease; cursor: pointer; text-decoration: none; display: block; animation: fadeIn 0.5s ease forwards; opacity: 0; }
-  .news-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.1); }
-  @keyframes fadeIn { to { opacity: 1; } }
-  .card-source { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .source-badge { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2); color: var(--gold); padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
-  .card-time { font-size: 0.72rem; color: var(--text-muted); }
-  .card-title { font-size: 0.98rem; font-weight: 600; line-height: 1.6; margin-bottom: 8px; color: var(--text); }
-  .card-summary { font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
-  .card-footer { display: flex; align-items: center; justify-content: space-between; }
-  .pair-tag { background: rgba(30,111,255,0.1); border: 1px solid rgba(30,111,255,0.2); color: var(--accent); padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
-  .read-more { font-size: 0.75rem; color: var(--gold); }
-  .loading { text-align: center; padding: 4rem; color: var(--text-muted); }
-  .spinner { width: 40px; height: 40px; border: 3px solid var(--dark-border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .telegram-section { background: linear-gradient(135deg, #0A1628, #111827); border: 1px solid rgba(30,111,255,0.2); border-radius: 20px; padding: 3rem 2rem; text-align: center; margin-bottom: 3rem; }
-  .tg-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.8rem; background: linear-gradient(135deg, #2AABEE, #229ED9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .tg-desc { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.7; }
-  .tg-btn { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #2AABEE, #229ED9); color: white; padding: 14px 28px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1rem; transition: all 0.3s; }
-  .tg-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(42,171,238,0.3); }
-  footer { border-top: 1px solid var(--dark-border); padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
-  .update-info { text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.5rem; }
-  @media (max-width: 768px) { .news-grid { grid-template-columns: 1fr; } main { padding: 0 1rem; } }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>هەواڵی ئابووری کوردی | Kurdish Economic News</title>
+  <meta name="description" content="دوایین هەواڵەکانی بازاڕی دراو و ئابووری جیهان بە زمانی کوردی">
+  <meta name="keywords" content="ئابووری, فۆرێکس, دراو, زێڕ, نەوت, بازاڕ">
+  <meta name="author" content="Economic News Kurdish">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="هەواڵی ئابووری کوردی">
+  <meta property="og:description" content="دوایین هەواڵەکانی بازاڕی دراو و ئابووری جیهان">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://economic-news-kurdish.com">
+  <meta property="og:image" content="https://economic-news-kurdish.com/og-image.jpg">
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    /* ===== Variables & Reset ===== */
+    :root {
+      --primary: #C9A84C;
+      --primary-dark: #B08C3A;
+      --primary-light: #E8C97A;
+      --secondary: #1E6FFF;
+      --secondary-dark: #0A5AE0;
+      --dark: #0A0E1A;
+      --dark-card: #111827;
+      --dark-border: #1E2A3A;
+      --text: #E8EDF5;
+      --text-muted: #8A9BB0;
+      --success: #00CC88;
+      --danger: #FF4444;
+      --warning: #FFBB33;
+      --info: #33B5E5;
+      --shadow: 0 10px 40px rgba(0,0,0,0.3);
+      --shadow-sm: 0 5px 20px rgba(0,0,0,0.2);
+      --transition: all 0.3s ease;
+      --radius: 16px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      min-height: 100vh;
+      direction: rtl;
+      line-height: 1.6;
+    }
+
+    /* ===== Typography ===== */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    /* ===== Header ===== */
+    header {
+      background: linear-gradient(135deg, #0A0E1A 0%, #111827 100%);
+      border-bottom: 2px solid var(--primary);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--dark);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo-text-wrapper {
+      position: relative;
+    }
+
+    .logo-text {
+      font-size: 1.4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: block;
+      margin-top: -5px;
+      letter-spacing: 1px;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,68,68,0.1);
+      border: 1px solid rgba(255,68,68,0.3);
+      border-radius: 50px;
+      padding: 8px 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--danger);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--danger);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+      box-shadow: 0 0 10px var(--danger);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    /* ===== Market Ticker ===== */
+    .ticker-wrap {
+      background: rgba(201,168,76,0.1);
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      border-top: 1px solid rgba(201,168,76,0.2);
+      overflow: hidden;
+      padding: 10px 0;
+      position: relative;
+    }
+
+    .ticker-wrap::before,
+    .ticker-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 100px;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .ticker-wrap::before {
+      left: 0;
+      background: linear-gradient(90deg, var(--dark), transparent);
+    }
+
+    .ticker-wrap::after {
+      right: 0;
+      background: linear-gradient(-90deg, var(--dark), transparent);
+    }
+
+    .ticker {
+      display: flex;
+      gap: 3rem;
+      animation: ticker 40s linear infinite;
+      white-space: nowrap;
+    }
+
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 15px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .ticker-name {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .ticker-value {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .ticker-up {
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .ticker-down {
+      color: var(--danger);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .ticker-up i, .ticker-down i {
+      font-size: 0.8rem;
+    }
+
+    @keyframes ticker {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(0); }
+    }
+
+    /* ===== Main Content ===== */
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .section-title i {
+      font-size: 2rem;
+      color: var(--primary);
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), transparent);
+      margin-right: 20px;
+    }
+
+    .update-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 50px;
+      padding: 8px 20px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .update-info i {
+      color: var(--primary);
+    }
+
+    .auto-refresh {
+      width: 10px;
+      height: 10px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    /* ===== News Grid ===== */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .news-card {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: var(--transition);
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .news-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 4px;
+      height: 0;
+      background: var(--primary);
+      transition: var(--transition);
+    }
+
+    .news-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(201,168,76,0.15);
+    }
+
+    .news-card:hover::before {
+      height: 100%;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .card-source {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .source-badge {
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--primary);
+      padding: 5px 15px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .card-time {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .card-time i {
+      font-size: 0.7rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      color: var(--text);
+      transition: var(--transition);
+    }
+
+    .news-card:hover .card-title {
+      color: var(--primary);
+    }
+
+    .card-summary {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 15px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+
+    .pairs-container {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pair-tag {
+      background: rgba(30,111,255,0.1);
+      border: 1px solid rgba(30,111,255,0.2);
+      color: var(--secondary);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .read-more {
+      font-size: 0.8rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: var(--transition);
+    }
+
+    .news-card:hover .read-more {
+      gap: 10px;
+    }
+
+    /* ===== Loading State ===== */
+    .loading {
+      text-align: center;
+      padding: 5rem;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid var(--dark-border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== Empty State ===== */
+    .empty-state {
+      text-align: center;
+      padding: 5rem;
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: var(--radius);
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .empty-state p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .empty-state a {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--primary);
+      color: var(--dark);
+      padding: 12px 30px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: var(--transition);
+    }
+
+    .empty-state a:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+    }
+
+    /* ===== Telegram Section ===== */
+    .telegram-section {
+      background: linear-gradient(135deg, #0A1628, #111827);
+      border: 1px solid rgba(30,111,255,0.2);
+      border-radius: var(--radius);
+      padding: 4rem 2rem;
+      text-align: center;
+      margin: 3rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .telegram-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(42,171,238,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .telegram-section i {
+      font-size: 4rem;
+      color: #2AABEE;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .tg-title {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #2AABEE, #229ED9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+    }
+
+    .tg-desc {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      line-height: 1.8;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+
+    .tg-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #2AABEE, #229ED9);
+      color: white;
+      padding: 16px 40px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: var(--transition);
+      position: relative;
+      box-shadow: 0 10px 30px rgba(42,171,238,0.3);
+    }
+
+    .tg-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(42,171,238,0.4);
+    }
+
+    .tg-btn i {
+      font-size: 1.2rem;
+      margin: 0;
+      color: white;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      border-top: 1px solid var(--dark-border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .footer-copyright {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .footer-copyright p {
+      margin: 0.3rem 0;
+    }
+
+    .footer-copyright i {
+      color: var(--danger);
+      margin: 0 5px;
+    }
+
+    /* ===== Responsive Design ===== */
+    @media (max-width: 1024px) {
+      .news-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-inner {
+        height: 70px;
+      }
+
+      .logo-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+
+      .logo-text {
+        font-size: 1rem;
+      }
+
+      .logo-sub {
+        font-size: 0.6rem;
+      }
+
+      .live-badge {
+        padding: 5px 12px;
+        font-size: 0.8rem;
+      }
+
+      .news-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      main {
+        padding: 0 1rem;
+      }
+
+      .section-title {
+        font-size: 1.2rem;
+      }
+
+      .tg-title {
+        font-size: 1.5rem;
+      }
+
+      .tg-btn {
+        padding: 12px 30px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo-text-wrapper {
+        display: none;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .update-info {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* ===== Print Styles ===== */
+    @media print {
+      header, .ticker-wrap, .telegram-section, footer {
+        display: none;
+      }
+
+      body {
+        background: white;
+        color: black;
+      }
+
+      .news-card {
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <div class="header-inner">
-    <div class="logo">
-      <div class="logo-icon">📊</div>
-      <div>
-        <div class="logo-text">هەواڵی ئابووری کوردی</div>
-        <span class="logo-sub">Kurdish Economic News</span>
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">📊</div>
+        <div class="logo-text-wrapper">
+          <div class="logo-text">هەواڵی ئابووری کوردی</div>
+          <span class="logo-sub">Kurdish Economic News</span>
+        </div>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span>زیندوو</span>
+        <i class="fas fa-bolt"></i>
       </div>
     </div>
-    <div class="live-badge"><div class="live-dot"></div>زیندوو</div>
-  </div>
-</header>
-<div class="ticker-wrap">
-  <div class="ticker">
-    <span class="ticker-item"><span class="ticker-name">EUR/USD</span> <span class="ticker-up">▲ 1.0842</span></span>
-    <span class="ticker-item"><span class="ticker-name">GBP/USD</span> <span class="ticker-down">▼ 1.2634</span></span>
-    <span class="ticker-item"><span class="ticker-name">XAU/USD</span> <span class="ticker-up">▲ 3,012.50</span></span>
-    <span class="ticker-item"><span class="ticker-name">WTI OIL</span> <span class="ticker-down">▼ 68.42</span></span>
-    <span class="ticker-item"><span class="ticker-name">USD/JPY</span> <span class="ticker-up">▲ 149.23</span></span>
-    <span class="ticker-item"><span class="ticker-name">EUR/USD</span> <span class="ticker-up">▲ 1.0842</span></span>
-    <span class="ticker-item"><span class="ticker-name">GBP/USD</span> <span class="ticker-down">▼ 1.2634</span></span>
-    <span class="ticker-item"><span class="ticker-name">XAU/USD</span> <span class="ticker-up">▲ 3,012.50</span></span>
-    <span class="ticker-item"><span class="ticker-name">WTI OIL</span> <span class="ticker-down">▼ 68.42</span></span>
-    <span class="ticker-item"><span class="ticker-name">USD/JPY</span> <span class="ticker-up">▲ 149.23</span></span>
-  </div>
-</div>
-<main>
-  <div class="section-title">📰 دوایین هەواڵەکان</div>
-  <div class="update-info" id="updateInfo">بارکردن...</div>
-  <div id="newsContainer"><div class="loading"><div class="spinner"></div><p>هەواڵەکان بارئەکرێن...</p></div></div>
-  <div class="telegram-section">
-    <div style="font-size:3rem;margin-bottom:1rem">✈️</div>
-    <div class="tg-title">بەشداری چەناڵەکەمان بکە</div>
-    <div class="tg-desc">هەموو ١٥ خولەکێک هەواڵی نوێی فۆرێکس و ئابووری<br>بە کوردیی سۆرانی بۆت دێت</div>
-    <a href="https://t.me/Economic_news_Kurdish" target="_blank" class="tg-btn">✈️ بەشداربوون لە تلیگرام</a>
-  </div>
-</main>
-<footer>
-  <p>© ٢٠٢٦ هەواڵی ئابووری کوردی — هەموو مافەکان پارێزراون</p>
-  <p style="margin-top:6px">هەواڵەکان لە CNBC، Bloomberg، Fox Business وەردەگیرێن</p>
-</footer>
-<script>
-const SUPABASE_URL = 'https://xekpxulamhgplnxfnczp.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_3i3wA3W-__nQLysnBSB6sQ__Ye-Bn4P';
+  </header>
 
-async function loadNews() {
-  const container = document.getElementById('newsContainer');
-  const updateInfo = document.getElementById('updateInfo');
-  try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc&limit=30`,
-      { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` } }
-    );
-    const news = await res.json();
-    if (!news.length) {
-      container.innerHTML = `<div style="text-align:center;padding:4rem;color:var(--text-muted)">
-        <div style="font-size:3rem;margin-bottom:1rem">📭</div>
-        <p>هێشتا هەواڵ نییە — چاوەڕێ بکە</p>
-        <a href="https://t.me/Economic_news_Kurdish" target="_blank" style="color:var(--gold);margin-top:1rem;display:inline-block">بچۆ بۆ چەناڵ ←</a>
-      </div>`;
-      updateInfo.textContent = 'هەواڵی نوێ هەموو ١٥ خولەکێک دێت';
-      return;
-    }
-    updateInfo.textContent = `کۆی هەواڵ: ${news.length} | نوێکردنەوە: ${new Date().toLocaleTimeString('ar')}`;
-    container.innerHTML = '<div class="news-grid" id="newsGrid"></div>';
-    const grid = document.getElementById('newsGrid');
-    news.forEach((item, i) => {
-      const date = new Date(item.published_at);
-      const timeStr = date.toLocaleTimeString('ar', {hour:'2-digit', minute:'2-digit'}) + ' | ' + date.toLocaleDateString('ar');
-      const card = document.createElement('a');
-      card.href = item.url || '#';
-      card.target = '_blank';
-      card.className = 'news-card';
-      card.style.animationDelay = `${i * 0.05}s`;
-      card.innerHTML = `
-        <div class="card-source">
-          <span class="source-badge">${item.source || 'هەواڵ'}</span>
-          <span class="card-time">${timeStr}</span>
+  <div class="ticker-wrap">
+    <div class="ticker" id="marketTicker">
+      <!-- Will be populated by JavaScript -->
+    </div>
+  </div>
+
+  <main>
+    <div class="section-header">
+      <div class="section-title">
+        <i class="fas fa-newspaper"></i>
+        <span>دوایین هەواڵەکان</span>
+      </div>
+      <div class="update-info" id="updateInfo">
+        <i class="fas fa-sync-alt"></i>
+        <span>بارکردن...</span>
+        <div class="auto-refresh"></div>
+      </div>
+    </div>
+
+    <div id="newsContainer">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>هەواڵەکان بارئەکرێن...</p>
+      </div>
+    </div>
+
+    <div class="telegram-section">
+      <i class="fab fa-telegram-plane"></i>
+      <div class="tg-title">بەشداری چەناڵەکەمان بکە</div>
+      <div class="tg-desc">
+        هەموو ١٥ خولەکێک هەواڵی نوێی فۆرێکس و ئابووری<br>
+        بە کوردیی سۆرانی بۆت دێت
+      </div>
+      <a href="https://t.me/Economic_news_Kurdish" target="_blank" class="tg-btn">
+        <i class="fab fa-telegram-plane"></i>
+        بەشداربوون لە تلیگرام
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#">سەرەکی</a>
+        <a href="#">هەواڵەکان</a>
+        <a href="#">بازاڕ</a>
+        <a href="#">پەیوەندی</a>
+        <a href="#">پرسیارە دووبارەکان</a>
+      </div>
+      <div class="footer-copyright">
+        <p>© ٢٠٢٤-٢٠٢٦ هەواڵی ئابووری کوردی — هەموو مافەکان پارێزراون</p>
+        <p>هەواڵەکان لە <i class="fas fa-chart-line"></i> CNBC، Bloomberg، Fox Business وەردەگیرێن</p>
+        <p>دروستکراوە بە <i class="fas fa-heart"></i> لەلایەن تیمی هەواڵی ئابووری کوردی</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const SUPABASE_URL = 'https://xekpxulamhgplnxfnczp.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_3i3wA3W-__nQLysnBSB6sQ__Ye-Bn4P';
+
+    // Market Data
+    const marketData = [
+      { pair: 'EUR/USD', value: '1.0842', change: '+0.23%', direction: 'up' },
+      { pair: 'GBP/USD', value: '1.2634', change: '-0.15%', direction: 'down' },
+      { pair: 'XAU/USD', value: '3,012.50', change: '+1.05%', direction: 'up' },
+      { pair: 'WTI OIL', value: '68.42', change: '-0.87%', direction: 'down' },
+      { pair: 'USD/JPY', value: '149.23', change: '+0.31%', direction: 'up' },
+      { pair: 'BTC/USD', value: '65,432', change: '+2.15%', direction: 'up' },
+      { pair: 'ETH/USD', value: '3,234', change: '+1.42%', direction: 'up' }
+    ];
+
+    // Populate Ticker
+    function populateTicker() {
+      const ticker = document.getElementById('marketTicker');
+      const doubledData = [...marketData, ...marketData]; // برای انیمیشن روان
+      
+      ticker.innerHTML = doubledData.map(item => `
+        <div class="ticker-item">
+          <span class="ticker-name">${item.pair}</span>
+          <span class="ticker-value">${item.value}</span>
+          <span class="ticker-${item.direction}">
+            <i class="fas fa-arrow-${item.direction === 'up' ? 'up' : 'down'}"></i>
+            ${item.change}
+          </span>
         </div>
-        <div class="card-title">${item.title_ku || ''}</div>
-        ${item.summary_ku ? `<div class="card-summary">${item.summary_ku}</div>` : ''}
-        <div class="card-footer">
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            ${item.pairs ? item.pairs.split(',').map(p => `<span class="pair-tag">${p.trim()}</span>`).join('') : ''}
-          </div>
-          <span class="read-more">زیاتر بخوێنەوە ←</span>
-        </div>`;
-      grid.appendChild(card);
-    });
-  } catch(e) {
-    container.innerHTML = `<div style="text-align:center;padding:4rem;color:var(--text-muted)">کێشە لە بارکردن — دووبارە هەوڵ بدە</div>`;
-  }
-}
+      `).join('');
+    }
 
-loadNews();
-setInterval(loadNews, 5 * 60 * 1000);
-</script>
+    // Load News from Supabase
+    async function loadNews() {
+      const container = document.getElementById('newsContainer');
+      const updateInfo = document.getElementById('updateInfo');
+      
+      try {
+        const response = await fetch(
+          `${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc&limit=30`,
+          { 
+            headers: { 
+              "apikey": SUPABASE_KEY, 
+              "Authorization": `Bearer ${SUPABASE_KEY}`,
+              "Content-Type": "application/json"
+            } 
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const news = await response.json();
+        
+        if (!news || news.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-newspaper"></i>
+              <p>هێشتا هەواڵ نییە — چاوەڕێی هەواڵی نوێ بکە</p>
+              <a href="https://t.me/Economic_news_Kurdish" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+                بچۆ بۆ چەناڵ
+              </a>
+            </div>
+          `;
+          updateInfo.innerHTML = `
+            <i class="fas fa-clock"></i>
+            <span>چاوەڕێی هەواڵی نوێ ...</span>
+          `;
+          return;
+        }
+
+        // Update info
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('ckb', { 
+          hour: '2-digit', 
+          minute: '2-digit',
+          second: '2-digit'
+        });
+        
+        updateInfo.innerHTML = `
+          <i class="fas fa-sync-alt"></i>
+          <span>کۆی هەواڵ: ${news.length} | نوێکردنەوە: ${timeStr}</span>
+          <div class="auto-refresh"></div>
+        `;
+
+        // Create news grid
+        container.innerHTML = '<div class="news-grid" id="newsGrid"></div>';
+        const grid = document.getElementById('newsGrid');
+
+        news.forEach((item, index) => {
+          const date = new Date(item.published_at);
+          const timeStr = date.toLocaleTimeString('ckb', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          });
+          const dateStr = date.toLocaleDateString('ckb');
+
+          const card = document.createElement('a');
+          card.href = item.url || '#';
+          card.target = '_blank';
+          card.rel = 'noopener noreferrer';
+          card.className = 'news-card';
+          card.style.animationDelay = `${index * 0.05}s`;
+
+          // Parse pairs if exists
+          const pairs = item.pairs ? item.pairs.split(',').map(p => p.trim()) : [];
+
+          card.innerHTML = `
+            <div class="card-source">
+              <span class="source-badge">
+                <i class="fas fa-${getSourceIcon(item.source)}"></i>
+                ${item.source || 'هەواڵ'}
+              </span>
+              <span class="card-time">
+                <i class="far fa-clock"></i>
+                ${timeStr} | ${dateStr}
+              </span>
+            </div>
+            <div class="card-title">${item.title_ku || ''}</div>
+            ${item.summary_ku ? `<div class="card-summary">${item.summary_ku}</div>` : ''}
+            <div class="card-footer">
+              <div class="pairs-container">
+                ${pairs.map(p => `<span class="pair-tag"><i class="fas fa-chart-line"></i> ${p}</span>`).join('')}
+              </div>
+              <span class="read-more">
+                زیاتر بخوێنەوە 
+                <i class="fas fa-arrow-left"></i>
+              </span>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error('Error loading news:', error);
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
+            <p>کێشە لە بارکردنی هەواڵەکان</p>
+            <button onclick="loadNews()" class="tg-btn" style="background: var(--primary); color: var(--dark);">
+              <i class="fas fa-redo"></i>
+              دووبارە هەوڵ بدە
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Helper function for source icons
+    function getSourceIcon(source) {
+      const icons = {
+        'CNBC': 'chart-line',
+        'Bloomberg': 'building',
+        'Fox Business': 'tv',
+        'Reuters': 'newspaper',
+        'default': 'circle'
+      };
+      return icons[source] || icons.default;
+    }
+
+    // Initialize
+    populateTicker();
+    loadNews();
+
+    // Auto refresh every 5 minutes
+    setInterval(loadNews, 5 * 60 * 1000);
+
+    // Refresh market data every minute
+    setInterval(() => {
+      // اینجا می‌توانید مقادیر بازار را به‌روز کنید
+      populateTicker();
+    }, 60 * 1000);
+  </script>
 </body>
 </html>
