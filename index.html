@@ -362,6 +362,13 @@
       font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .source-badge i {
+      font-size: 0.7rem;
     }
 
     .card-time {
@@ -383,6 +390,10 @@
       margin-bottom: 12px;
       color: var(--text);
       transition: var(--transition);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .news-card:hover .card-title {
@@ -422,6 +433,13 @@
       font-size: 0.7rem;
       font-weight: 600;
       letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pair-tag i {
+      font-size: 0.6rem;
     }
 
     .read-more {
@@ -831,138 +849,4 @@
           { 
             headers: { 
               "apikey": SUPABASE_KEY, 
-              "Authorization": `Bearer ${SUPABASE_KEY}`,
-              "Content-Type": "application/json"
-            } 
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const news = await response.json();
-        
-        if (!news || news.length === 0) {
-          container.innerHTML = `
-            <div class="empty-state">
-              <i class="fas fa-newspaper"></i>
-              <p>هێشتا هەواڵ نییە — چاوەڕێی هەواڵی نوێ بکە</p>
-              <a href="https://t.me/Economic_news_Kurdish" target="_blank">
-                <i class="fab fa-telegram-plane"></i>
-                بچۆ بۆ چەناڵ
-              </a>
-            </div>
-          `;
-          updateInfo.innerHTML = `
-            <i class="fas fa-clock"></i>
-            <span>چاوەڕێی هەواڵی نوێ ...</span>
-          `;
-          return;
-        }
-
-        // Update info
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('ckb', { 
-          hour: '2-digit', 
-          minute: '2-digit',
-          second: '2-digit'
-        });
-        
-        updateInfo.innerHTML = `
-          <i class="fas fa-sync-alt"></i>
-          <span>کۆی هەواڵ: ${news.length} | نوێکردنەوە: ${timeStr}</span>
-          <div class="auto-refresh"></div>
-        `;
-
-        // Create news grid
-        container.innerHTML = '<div class="news-grid" id="newsGrid"></div>';
-        const grid = document.getElementById('newsGrid');
-
-        news.forEach((item, index) => {
-          const date = new Date(item.published_at);
-          const timeStr = date.toLocaleTimeString('ckb', { 
-            hour: '2-digit', 
-            minute: '2-digit' 
-          });
-          const dateStr = date.toLocaleDateString('ckb');
-
-          const card = document.createElement('a');
-          card.href = item.url || '#';
-          card.target = '_blank';
-          card.rel = 'noopener noreferrer';
-          card.className = 'news-card';
-          card.style.animationDelay = `${index * 0.05}s`;
-
-          // Parse pairs if exists
-          const pairs = item.pairs ? item.pairs.split(',').map(p => p.trim()) : [];
-
-          card.innerHTML = `
-            <div class="card-source">
-              <span class="source-badge">
-                <i class="fas fa-${getSourceIcon(item.source)}"></i>
-                ${item.source || 'هەواڵ'}
-              </span>
-              <span class="card-time">
-                <i class="far fa-clock"></i>
-                ${timeStr} | ${dateStr}
-              </span>
-            </div>
-            <div class="card-title">${item.title_ku || ''}</div>
-            ${item.summary_ku ? `<div class="card-summary">${item.summary_ku}</div>` : ''}
-            <div class="card-footer">
-              <div class="pairs-container">
-                ${pairs.map(p => `<span class="pair-tag"><i class="fas fa-chart-line"></i> ${p}</span>`).join('')}
-              </div>
-              <span class="read-more">
-                زیاتر بخوێنەوە 
-                <i class="fas fa-arrow-left"></i>
-              </span>
-            </div>
-          `;
-
-          grid.appendChild(card);
-        });
-
-      } catch (error) {
-        console.error('Error loading news:', error);
-        container.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
-            <p>کێشە لە بارکردنی هەواڵەکان</p>
-            <button onclick="loadNews()" class="tg-btn" style="background: var(--primary); color: var(--dark);">
-              <i class="fas fa-redo"></i>
-              دووبارە هەوڵ بدە
-            </button>
-          </div>
-        `;
-      }
-    }
-
-    // Helper function for source icons
-    function getSourceIcon(source) {
-      const icons = {
-        'CNBC': 'chart-line',
-        'Bloomberg': 'building',
-        'Fox Business': 'tv',
-        'Reuters': 'newspaper',
-        'default': 'circle'
-      };
-      return icons[source] || icons.default;
-    }
-
-    // Initialize
-    populateTicker();
-    loadNews();
-
-    // Auto refresh every 5 minutes
-    setInterval(loadNews, 5 * 60 * 1000);
-
-    // Refresh market data every minute
-    setInterval(() => {
-      // اینجا می‌توانید مقادیر بازار را به‌روز کنید
-      populateTicker();
-    }, 60 * 1000);
-  </script>
-</body>
-</html>
+              "Authoriz
