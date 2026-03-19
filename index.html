@@ -362,13 +362,6 @@
       font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .source-badge i {
-      font-size: 0.7rem;
     }
 
     .card-time {
@@ -390,10 +383,6 @@
       margin-bottom: 12px;
       color: var(--text);
       transition: var(--transition);
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
 
     .news-card:hover .card-title {
@@ -433,13 +422,6 @@
       font-size: 0.7rem;
       font-weight: 600;
       letter-spacing: 0.3px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .pair-tag i {
-      font-size: 0.6rem;
     }
 
     .read-more {
@@ -849,4 +831,17 @@
           { 
             headers: { 
               "apikey": SUPABASE_KEY, 
-              "Authoriz
+              "Authorization": `Bearer ${SUPABASE_KEY}`,
+              "Content-Type": "application/json"
+            } 
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const news = await response.json();
+        
+        if (!news || news.length === 0) {
+          container.inne
